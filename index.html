@@ -110,6 +110,9 @@
   }
   @media(orientation:portrait) and (max-width:768px){.landscape-hint{display:flex !important}}
   .landscape-hint{display:none}
+  .leaflet-popup-content-wrapper{border-radius:12px!important;box-shadow:0 4px 20px rgba(0,0,0,0.15)!important;}
+  .leaflet-popup-content{margin:12px 14px!important;}
+  .km-popup .leaflet-popup-tip{background:white;}
 </style>
 </head>
 <body>
@@ -850,6 +853,42 @@ function loadMapaCiudad(name){
     });
   };
 
+  // Local descriptions per city and km
+  const DESC={
+    "Berlín":{5:"Start in Tiergarten, Berlin's green lung. Great atmosphere from the gun.",10:"Charlottenburg area — elegant boulevards and the Gedächtniskirche in the background.",15:"Ku'damm (Kurfürstendamm) — the great commercial boulevard, huge crowds here.",20:"Schöneberg neighbourhood, very lively and colourful atmosphere.",25:"Crossing the Wall — Potsdamer Platz and the Holocaust Memorial in sight.",30:"Unter den Linden — Berlin's most iconic avenue. Spectacular.",35:"Museumsinsel — the Museum Island, UNESCO World Heritage. Beautiful stretch.",40:"Last big push before the Brandenburg Gate.",42.195:"🏁 FINISH — Brandenburg Gate. One of the most epic finish lines in the world!"},
+    "Tokio":{5:"Start at Tokyo Metropolitan Government Building. Incredible skyline.",10:"Shinjuku district — neon lights, skyscrapers and incredibly loud crowds.",15:"Asakusa with Senso-ji temple on the horizon. Traditional Tokyo.",20:"Crossing the Sumida River with views of Tokyo Skytree (634m). Must-take photo.",25:"Tsukiji area — the world's most famous former fish market.",30:"Ginza — Tokyo's most exclusive district. Jewellers and art galleries.",35:"Marunouchi — the financial heart, facing Tokyo Central Station.",40:"Imperial Palace Gardens — serene and beautiful stretch.",42.195:"🏁 FINISH — Tokyo Big Sight. Kanpai! 乾杯"},
+    "Rotterdam":{5:"Port of Rotterdam — the largest in Europe. Spectacular industrial atmosphere.",10:"Wilhelminaplein — regenerated harbour area with striking modern architecture.",15:"Crossing the Erasmusbrug (Erasmus Bridge) — Rotterdam's symbol. A unique moment.",20:"Kop van Zuid — up-and-coming district with views over the Maas. Very lively.",25:"Feijenoord — working-class area with a strong marathon tradition and loyal crowds.",30:"Kralingse Bos — the great lake park of Rotterdam. Quiet and beautiful stretch.",35:"De Kuip — Feyenoord's stadium. Supporters line the street here.",40:"Coolsingel — the great central avenue, rebuilt after WWII.",42.195:"🏁 FINISH — Coolsingel. Rotterdam welcomes you as a hero!"},
+    "New York":{5:"Crossing the Verrazzano Bridge — spectacular views of Manhattan from Staten Island.",10:"Brooklyn — Bay Ridge neighbourhood, communities from all over the world cheering.",15:"Bedford-Stuyvesant — the heart of historic and African-American Brooklyn.",20:"Queensboro Bridge — silence, then the roar of Manhattan. A legendary moment.",25:"1st Avenue — the loudest kilometre in the world. The crowd is absolutely incredible.",30:"The Bronx — you cross the Willis Bridge, the only Bronx section of the race.",35:"Harlem — 5th Avenue and Marcus Garvey Park. Live gospel drums.",40:"Central Park — you enter from the south. You can almost smell the finish. Crowds on both sides.",42.195:"🏁 FINISH — Central Park, Tavern on the Green. New York, New York!"},
+    "Chicago":{5:"Grant Park — where the marathon begins and ends. Views over Lake Michigan.",10:"Lincoln Park — Chicago's greenest neighbourhood, right on the lakefront. Beautiful stretch.",15:"Lakeview and Wrigleyville — home of Wrigley Field (baseball). Great neighbourhood vibe.",20:"River North — crossing the Chicago River, skyscrapers and packed terraces.",25:"The Loop — Chicago's financial heart, surrounded by historic architecture.",30:"Pilsen — Chicago's Mexican neighbourhood. Murals, music and massive support.",35:"Chinatown — unique aromas and colours. Strong support from the local community.",40:"Museum Campus — Field Museum and Shedd Aquarium on the right, the lake on the left.",42.195:"🏁 FINISH — Grant Park, Columbus Drive. Chicago gives you the biggest medal!"},
+    "Sydney":{5:"Pyrmont — former docklands turned tech hub. Views over Darling Harbour.",10:"Millers Point — one of Sydney's oldest neighbourhoods, by the historic harbour.",15:"Macquarie Street — the street of power: Parliament, Hospital and Botanic Gardens.",20:"Anzac Parade — the great boulevard of Australian heroes. Long, straight stretch.",25:"Centennial Park — Sydney's Central Park. Eucalyptus trees and peaceful nature.",30:"Moore Park — next to Allianz Stadium, home of Australian rugby.",35:"Surry Hills — hipster neighbourhood with specialty coffee shops. Young, lively crowd.",40:"Mrs Macquaries Road — views of the Harbour Bridge and Opera House. The most photogenic km.",42.195:"🏁 FINISH — The Domain. With the Sydney Opera House as a backdrop. Unforgettable."},
+    "Tokio":{5:"Start at Tokyo Metropolitan Government Building. Incredible skyline.",10:"Shinjuku district — neon lights, skyscrapers and incredibly loud crowds.",15:"Asakusa with Senso-ji temple on the horizon. Traditional Tokyo.",20:"Crossing the Sumida River with views of Tokyo Skytree (634m). Must-take photo.",25:"Tsukiji area — the world's most famous former fish market.",30:"Ginza — Tokyo's most exclusive district. Jewellers and art galleries.",35:"Marunouchi — the financial heart, facing Tokyo Central Station.",40:"Imperial Palace Gardens — serene and beautiful stretch.",42.195:"🏁 FINISH — Tokyo Big Sight. Kanpai! 乾杯"},
+    "Tokyo":{5:"Start at Tokyo Metropolitan Government Building. Incredible skyline.",10:"Shinjuku district — neon lights, skyscrapers and incredibly loud crowds.",15:"Asakusa with Senso-ji temple on the horizon. Traditional Tokyo.",20:"Crossing the Sumida River with views of Tokyo Skytree (634m). Must-take photo.",25:"Tsukiji area — the world's most famous former fish market.",30:"Ginza — Tokyo's most exclusive district. Jewellers and art galleries.",35:"Marunouchi — the financial heart, facing Tokyo Central Station.",40:"Imperial Palace Gardens — serene and beautiful stretch.",42.195:"🏁 FINISH — Tokyo Big Sight. Kanpai! 乾杯"},
+    "Barcelona":{5:"Avinguda Diagonal — Barcelona's great main axis. Big crowds and great atmosphere from the start.",10:"University district — the Montjuïc Olympic Stadium visible in the distance.",15:"Passeig de Gràcia — the jewel of the Eixample. La Pedrera and Casa Batlló alongside you.",20:"Barceloneta — you reach the Mediterranean Sea. Spectacular views and huge applause.",25:"Vila Olímpica — built for the 1992 Games. Modern architecture by the sea.",30:"Poblenou — former industrial district turned creative hub. Very lively.",35:"Sagrada Família — you run past Gaudí's masterpiece. A unique moment.",40:"Passeig de Sant Joan — almost the final straight, lots of crowd support.",42.195:"🏁 FINISH — Passeig de Gràcia. Barcelona gives you a standing ovation!"},
+    "Frankfurt":{5:"Sachsenhausen — the cider tavern district (Apfelwein). A unique neighbourhood atmosphere.",10:"Museumsufer — the museum mile along the Main river. One of the most beautiful stretches.",15:"Westend — the financial district with Germany's tallest skyline.",20:"Nordend — elegant residential area, century-old trees and great support.",25:"Bornheim — Frankfurt's liveliest neighbourhood. Packed terraces and great atmosphere.",30:"Fechenheim — regenerated industrial zone, loyal and loud crowd.",35:"Enkheim — quieter stretch on the outskirts, but very enthusiastic volunteers.",40:"Ostend — Frankfurt's cool new neighbourhood by the river. Almost home.",42.195:"🏁 FINISH — Festhalle Frankfurt. One of the most spectacular finish lines in Europe!"},
+    "London":{5:"Blackheath — classic park start. Three waves of runners, great spectacle.",10:"Woolwich — riverside area along the Thames. The support starts to build.",15:"Isle of Dogs — Canary Wharf, London's financial skyscrapers. Impressive.",20:"Tower Bridge — the most iconic moment of the London Marathon. Masses on the bridge.",25:"Bermondsey and Southwark — the South Bank, along the Thames. Fantastic atmosphere.",30:"Limehouse — views of the river and historic boats. The Thames always close.",35:"Embankment — straights along the river with Big Ben in the background. Very emotional.",40:"St James's Park — you enter the royal park. The finish line is almost here.",42.195:"🏁 FINISH — The Mall, in front of Buckingham Palace. Historic!"},
+    "París":{5:"Bois de Vincennes — the great forest east of Paris. Calm, green start.",10:"Nation — one of Paris's great squares. The crowd fills the pavements.",15:"Bastille — the famous square of the French Revolution. Lots of atmosphere and emotion.",20:"Notre-Dame — you run past the cathedral under reconstruction. A unique and historic sight.",25:"Hôtel de Ville — Paris city hall with its spectacular Gothic facade.",30:"Louvre — the world's most visited museum on your right. A surreal moment.",35:"Trocadéro — head-on views of the Eiffel Tower. The most photogenic kilometre in the world.",40:"Bois de Boulogne — you enter the great western forest. Last push.",42.195:"🏁 FINISH — Bois de Boulogne. Paris embraces you as you cross the line!"},
+    "Valencia":{5:"Jardines del Turia — the river turned urban park. The greenest, freshest stretch.",10:"Ruzafa — Valencia's hippest neighbourhood. Great vibe and good music.",15:"Port of Valencia — maritime area with the America's Cup as a backdrop.",20:"Malvarrosa — Valencia's most famous beach. Mediterranean views and big crowds.",25:"Cabanyal — the historic fishermen's neighbourhood, full of colour and life.",30:"Ciudad de las Artes y las Ciencias — Calatrava's masterpiece. Must-take photo.",35:"Campanar — residential area with very loyal and loud crowd support.",40:"Jardines del Turia again — back in the river park. The finish is close.",42.195:"🏁 FINISH — Paseo de la Alameda. Valencia in February is magical!"},
+    "Rom":{5:"Via Cristoforo Colombo — fast, flat start. Rome welcomes you with sunshine.",10:"EUR — the monumental Fascist-era district. Imposing architecture.",15:"Circo Massimo — the largest racetrack of antiquity. 300,000 spectators once filled this place.",20:"Colosseum — the world's most famous monument on your right. A unique moment.",25:"Fori Imperiali — the Imperial Forums. You are literally running through Roman history.",30:"Piazza Venezia — the historic heart of Rome. The Vittoriano dominates the skyline.",35:"Via del Corso — Rome's great commercial artery, packed with cheering crowds.",40:"Villa Borghese — Rome's great park. Last push among pine trees and fountains.",42.195:"🏁 FINISH — Via Sacra. You finish in the heart of the Roman Empire!"},
+    "Sevilla":{5:"Triana — the flamenco and ceramics neighbourhood. You cross the Guadalquivir to great atmosphere.",10:"Old Town — the Cathedral and Giralda accompany you. The most monumental Seville.",15:"Parque de María Luisa — spectacular gardens from the 1929 Exhibition. A beautiful stretch.",20:"Nervión — modern district next to the Ramón Sánchez-Pizjuán stadium. Great Sevillian support.",25:"Macarena — Seville's most popular and authentic neighbourhood. Lots of heart here.",30:"Alameda de Hércules — Seville's most lively promenade, full of bars and terraces.",35:"El Arenal — next to the Maestranza bullring and the river. The most beautiful stretch.",40:"Expo 92 — Cartuja island, host of the World Expo. Almost at the finish.",42.195:"🏁 FINISH — Paseo de la Palmera. Seville in February is magical!"},
+    "Hamburg":{5:"HafenCity — Hamburg's most modern district, built on the old harbour.",10:"Speicherstadt — the historic warehouse district, UNESCO World Heritage. Beautiful.",15:"Altona — riverside neighbourhood on the Elbe with fish market and great atmosphere.",20:"Ottensen — Hamburg's creative, bohemian neighbourhood. Cafés, bookshops, young crowd.",25:"Eimsbüttel — elegant residential area with enormous trees and very family-friendly support.",30:"Barmbek — working-class area with great tradition and an incredibly loud crowd.",35:"Uhlenhorst — alongside the Alster lake, one of the most beautiful stretches of the race.",40:"Binnenalster — Hamburg's inner lake. The city skyline spread before you.",42.195:"🏁 FINISH — Rathausmarkt. Hamburg's City Hall as the backdrop. Unforgettable!"}
+  };
+
+  const calcHoraPrevista=(km)=>{
+    const corredor=ca!==null&&C[ca]?C[ca]:null;
+    if(!corredor) return null;
+    const salida=corredor.salidaPersonal||corredor.salidaOficial;
+    if(!salida) return null;
+    const ritmoStr=corredor.ritmo;
+    if(!ritmoStr) return null;
+    const parts=ritmoStr.split(':');
+    if(parts.length<2) return null;
+    const ritmoSeg=parseInt(parts[0])*60+parseInt(parts[1]);
+    const totalSeg=t2s(salida)+Math.round(km*ritmoSeg);
+    const h=Math.floor(totalSeg/3600)%24;
+    const m=Math.floor((totalSeg%3600)/60);
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+  };
+
   // Marcadores de KM de la ciudad (cada 5km + meta)
   const todosKm=ciudad.puntos;
   // Solo mostrar km 5, 10, 15... + meta para no saturar
@@ -857,6 +896,7 @@ function loadMapaCiudad(name){
   
   // Calcular posición interpolada en la polyline para cada km
   const totalCoords=ciudad.coords.length;
+  const descCiudad=DESC[name]||{};
   kmFiltrados.forEach(p=>{
     const progr=p.km/42.195;
     const idx=Math.min(Math.floor(progr*(totalCoords-1)),totalCoords-1);
@@ -864,8 +904,18 @@ function loadMapaCiudad(name){
     const lng=ciudad.coords[idx][1];
     const isStart=p.km<=2;
     const isMeta=p.km>=42;
+    const horaPrev=calcHoraPrevista(p.km);
+    const desc=descCiudad[p.km]||descCiudad[Math.round(p.km)]||'';
+    const kmLabel=isStart?'START':isMeta?'FINISH':'Km '+p.km;
+    const popupHTML=`<div style="font-family:sans-serif;min-width:180px;max-width:240px;">
+      <div style="font-weight:800;font-size:.95rem;color:#1a2740;margin-bottom:4px;">📍 ${kmLabel}</div>
+      <div style="font-size:.82rem;color:#555;margin-bottom:${horaPrev||desc?'8px':'0'};">${p.calle}</div>
+      ${horaPrev?`<div style="background:#eef4ff;border-radius:6px;padding:5px 8px;margin-bottom:${desc?'6px':'0'};font-size:.82rem;">⏱ <strong>Expected time: ${horaPrev}</strong></div>`:''}
+      ${desc?`<div style="font-size:.8rem;color:#444;line-height:1.4;">💬 ${desc}</div>`:''}
+    </div>`;
     const marker=L.marker([lat,lng],{icon:kmIcon(p.km,isStart,isMeta)})
       .bindTooltip(isStart?'🏁 START':(isMeta?'🏁 FINISH · '+p.calle:'km '+p.km+' · '+p.calle),{permanent:false,direction:'top',offset:[0,-14]})
+      .bindPopup(popupHTML,{maxWidth:260,className:'km-popup'})
       .addTo(leafletMap);
     mapaLayers.push(marker);
   });
