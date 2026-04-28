@@ -807,7 +807,7 @@ function guardarCorreder(){
     const v=C[ca].pasos||[];
     corredor.pasos=corredor.pasos.map(p=>{const x=v.find(y=>y.km===p.km);if(x&&x.horaReal){p.horaReal=x.horaReal;p.horaRealSecs=x.horaRealSecs;}return p;});
     C[ca]=corredor;
-  }else{if(C.length>=5){alert('Máximo 5 corredores');return;}C.push(corredor);}
+  }else{if(C.length>=5){alert('max 5 runners');return;}C.push(corredor);}
   sv();showPage('lista');
 }
 
@@ -815,7 +815,7 @@ function aS(i){
   ca=i;const c=C[i];
   document.getElementById('seg-nombre').textContent=c.nombre+(c.dorsal?' #'+c.dorsal:'');
   const flag=c.ciudad&&CIUDADES[c.ciudad]?CIUDADES[c.ciudad].flag+' ':'';
-  document.getElementById('seg-sub').textContent=flag+(c.carrera||'')+' · Marca objetivo: '+(c.marca||'—')+' ('+(c.ritmo||'—')+'/km)';
+  document.getElementById('seg-sub').textContent=flag+(c.carrera||'')+' · Target time: '+(c.marca||'—')+' ('+(c.ritmo||'—')+'/km)';
   rS();showPage('seguimiento');
   clearInterval(timerSeg);timerSeg=setInterval(tick,1000);tick();
 }
@@ -825,7 +825,7 @@ function tick(){
   if(!c.salidaOficial){reloj.textContent=ahora.toLocaleTimeString();return;}
   const sd=new Date();const[h,m,s]=c.salidaOficial.split(':').map(Number);sd.setHours(h,m,s||0,0);
   const diff=Math.floor((ahora-sd)/1000);
-  if(diff<0){reloj.textContent='⏳ Salida en '+fh(-diff);return;}
+  if(diff<0){reloj.textContent='⏳ Start in '+fh(-diff);return;}
   reloj.textContent='⏱ '+fh(diff);
  
   const pasos=c.pasos||[],conHora=pasos.filter(p=>p.horaRealSecs!=null);
