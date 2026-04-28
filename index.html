@@ -205,7 +205,7 @@ async function checkLicense(){
     <div class="row2">
       <div><label>Bib number</label><input type="number" id="f-dorsal" placeholder="e.g.: 4521" min="1"></div>
       <div><label>Gender</label>
-        <select id="f-sexo"><option value="">—</option><option value="M">Male</option><option value="F">Female</option></select>
+        <select id="f-sexo"><option value=""></option><option value="M">Male</option><option value="F">Female</option></select>
       </div>
     </div>
   </div>
@@ -791,7 +791,7 @@ function syncSalida(){
 
 function guardarCorreder(){
   const n=document.getElementById('f-nombre').value.trim();
-  if(!n){alert('El nombre es obligatorio');return;}
+  if(!n){alert('');return;}
   const marca=getMarca(),ms=getMarcaSecs(),rs=ms?ms/KM:null;
   const so=document.getElementById('f-salida-oficial').value;
   const pasos=pt.filter(p=>p.km>0).sort((a,b)=>parseFloat(a.km)-parseFloat(b.km)).map(p=>{
@@ -863,8 +863,8 @@ function rS(){
       '<td style="font-variant-numeric:tabular-nums;">'+(p.horaPrevista||'—')+'</td>'+
       '<td style="font-variant-numeric:tabular-nums;color:'+(ps?'var(--green)':'var(--text2)')+';font-weight:'+(ps?700:400)+';">'+(p.horaReal||'—')+'</td>'+
       '<td>'+dh+'</td>'+
-      '<td>'+(ps?'<button class="btn btn-outline btn-sm" onclick="resP('+i+')">↩ Deshacer</button>':
-                '<button class="btn btn-green btn-sm" onclick="regP('+i+')">📍 ¡Aquí!</button>')+
+      '<td>'+(ps?'<button class="btn btn-outline btn-sm" onclick="resP('+i+')">↩ Undo</button>':
+                '<button class="btn btn-green btn-sm" onclick="regP('+i+')">📍 ¡Here!</button>')+
       '</td></tr>';
   }).join('');
   const mp=pasos.find(p=>p.km>=42&&p.horaReal),mc=document.getElementById('seg-meta-card');
