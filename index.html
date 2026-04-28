@@ -690,7 +690,7 @@ function selCiudad(name){
   const btn=document.getElementById('cbtn-'+name);if(btn)btn.classList.add('sel');
   const fc=document.getElementById('f-carrera');
   if(!fc.value||Object.keys(CIUDADES).some(c=>fc.value.includes(c)))
-    fc.value='Maratón de '+name+'';
+    fc.value='Marathon of '+name+'';
   pt=CIUDADES[name].puntos.map(p=>({km:p.km,calle:p.calle}));
   rPF();
 }
@@ -700,15 +700,15 @@ function rL(){
   if(!C.length){el.innerHTML='<div style="text-align:center;padding:48px 20px;color:var(--text2);"><div style="font-size:3rem;margin-bottom:12px;">🏃</div><p>No runners yet.<br>Press <b>"+ New Runner"</b>to get started.</p></div>';return;}
   el.innerHTML=C.map((c,i)=>{
     const p=(c.pasos||[]).filter(x=>x.horaReal).length,tt=(c.pasos||[]).length;
-    const b=p===0?'<span class="badge badge-yellow">En espera</span>':
-             p>=tt?'<span class="badge badge-green">Finalizado ✓</span>':
-             '<span class="badge badge-red">corriendo · '+p+'/'+tt+'</span>';
+    const b=p===0?'<span class="badge badge-yellow">Waiting</span>':
+             p>=tt?'<span class="badge badge-green">Finished ✓</span>':
+             '<span class="badge badge-red">Running · '+p+'/'+tt+'</span>';
     const flag=c.ciudad&&CIUDADES[c.ciudad]?CIUDADES[c.ciudad].flag+' ':'🏙️ ';
     return '<div class="runner-item">'+
       '<div class="runner-avatar">'+c.nombre.charAt(0).toUpperCase()+'</div>'+
       '<div class="runner-info">'+
         '<div class="runner-name">'+c.nombre+(c.dorsal?' <span style="color:var(--text2);font-size:.8rem;">#'+c.dorsal+'</span>':'')+'</div>'+
-        '<div class="runner-sub">'+flag+(c.carrera||'—')+' · Marca objetivo: '+(c.marca||'—')+' · '+(c.ritmo||'—')+'/km</div>'+
+        '<div class="runner-sub">'+flag+(c.carrera||'—')+' · Target time: '+(c.marca||'—')+' · '+(c.ritmo||'—')+'/km</div>'+
         '<div style="margin-top:5px;">'+b+'</div>'+
       '</div>'+
       '<div class="runner-actions">'+
