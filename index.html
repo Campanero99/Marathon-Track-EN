@@ -546,7 +546,7 @@ function loadMapaCiudad(name){
   const btn=document.getElementById('mcbtn-'+name);if(btn)btn.classList.add('active');
   mapCiudadActual=name;
   const ciudad=CIUDADES[name];
-  document.getElementById('mapa-titulo').textContent='🗺 Maratón de '+name;
+  document.getElementById('mapa-titulo').textContent='🗺 Marathon of '+name;
   document.getElementById('mapa-subtitulo').textContent='42,195 km · '+ciudad.puntos.length+' puntos marcados';
   document.getElementById('map-no-city').style.display='none';
   document.getElementById('map-legend').style.display='block';
@@ -697,7 +697,7 @@ function selCiudad(name){
 
 function rL(){
   const el=document.getElementById('lista-corredores');
-  if(!C.length){el.innerHTML='<div style="text-align:center;padding:48px 20px;color:var(--text2);"><div style="font-size:3rem;margin-bottom:12px;">🏃</div><p>Aún no hay corredores.<br>Pulsa <b>"+ Nuevo corredor"</b> para empezar.</p></div>';return;}
+  if(!C.length){el.innerHTML='<div style="text-align:center;padding:48px 20px;color:var(--text2);"><div style="font-size:3rem;margin-bottom:12px;">🏃</div><p>No runners yet.<br>Press <b>"+ New Runner"</b>to get started.</p></div>';return;}
   el.innerHTML=C.map((c,i)=>{
     const p=(c.pasos||[]).filter(x=>x.horaReal).length,tt=(c.pasos||[]).length;
     const b=p===0?'<span class="badge badge-yellow">En espera</span>':
@@ -712,9 +712,9 @@ function rL(){
         '<div style="margin-top:5px;">'+b+'</div>'+
       '</div>'+
       '<div class="runner-actions">'+
-        '<button class="btn btn-outline btn-sm" onclick="eC('+i+')">✏️ Editar</button>'+
-        '<button class="btn btn-primary btn-sm" onclick="aS('+i+')">📍 Seguir</button>'+
-        '<button class="btn btn-outline btn-sm" onclick="verMapa('+i+')">Recorrido</button>'+
+        '<button class="btn btn-outline btn-sm" onclick="eC('+i+')">✏️ Edit</button>'+
+        '<button class="btn btn-primary btn-sm" onclick="aS('+i+')">📍 follow</button>'+
+        '<button class="btn btn-outline btn-sm" onclick="verMapa('+i+')">Route</button>'+
         '<button class="btn btn-danger btn-sm" onclick="bC('+i+')">🗑</button>'+
       '</div></div>';
   }).join('');
@@ -736,7 +736,7 @@ function nuevoCorreder(){
   setMarca('');
   document.getElementById('f-sexo').value='';
   document.getElementById('diferencia-salida').style.display='none';
-  document.getElementById('ficha-titulo').textContent='Nuevo corredor';
+  document.getElementById('ficha-titulo').textContent='New runner';
   pt=[];buildCityGrid();rPF();showPage('ficha');
 }
 
@@ -895,7 +895,7 @@ function resP(i){
 
 function rPS(){
   const s=document.getElementById('prono-corredor');
-  s.innerHTML='<option value="">— Ningún corredor seleccionado —</option>'+
+  s.innerHTML='<option value="">— No runners selected —</option>'+
     C.map((c,i)=>'<option value="'+i+'">'+c.nombre+(c.dorsal?' #'+c.dorsal:'')+(c.carrera?' — '+c.carrera:'')+'</option>').join('');
 }
 function autoRellenarProno(){
@@ -930,9 +930,9 @@ function calcProno(){
     if(ms4){
       vs.style.display='block';
       const d=tot-ms4,e=document.getElementById('prono-vs-t');
-      if(Math.abs(d)<=30)e.innerHTML='<span class="badge badge-green">🎯 ¡marca conseguida! '+fh(tot)+' vs '+c.marca+'</span>';
-      else if(d>0)e.innerHTML='<span class="badge badge-red">+'+fh(d)+' sobre marca objetivo ('+c.marca+')</span>';
-      else e.innerHTML='<span class="badge badge-green">🔥 '+fh(-d)+' bajo marca objetivo ('+c.marca+')</span>';
+      if(Math.abs(d)<=30)e.innerHTML='<span class="badge badge-green">🎯 target achieved! '+fh(tot)+' vs '+c.marca+'</span>';
+      else if(d>0)e.innerHTML='<span class="badge badge-red">+'+fh(d)+' above target time ('+c.marca+')</span>';
+      else e.innerHTML='<span class="badge badge-green">🔥 '+fh(-d)+' below target time ('+c.marca+')</span>';
     }else vs.style.display='none';
   }else vs.style.display='none';
   el.style.display='block';
